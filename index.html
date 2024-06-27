@@ -1,0 +1,431 @@
+<br>How are public keys used in Solana?<br>
+<strong>Public keys</strong>&nbsp;are used as “addresses” that point to
+accounts on the Solana network. Public keys can be shared with anyone.<br>
+<br>What can Solana accounts store?
+<ul>
+  <li>SOL</li>
+  <li>Other tokens, like USDC</li>
+  <li>NFTs</li>
+  <li>Programs</li>
+  <li>Program data</li>
+</ul>
+<br>Each SOL contains ...<br>Each SOL contains one billion Lamports.<br>
+<br>Transactions are ...<br>Transactions are atomic<br>
+<br>Transactions contain ...<br>Transactions contain instructions<br>
+<br>Each instruction contains:
+<ul>
+  <li>an array of accounts that will be read from and/or written to. This is what makes Solana fast - transactions that
+    affect different accounts are processed simultaneously&nbsp;</li>
+  <li>the public key of the program to invoke&nbsp;</li>
+  <li>data passed to the program being invoked, structured as a byte array</li>
+</ul>
+<br>SPL stands for ...<br>SPL stands for&nbsp;Solana Program Library<br>
+<br>The Token Program, part of SPL, allows you to:
+<ul>
+  <li>Create a new Token Mint</li>
+  <li>Create Token Accounts</li>
+  <li>Mint</li>
+  <li>Transfer tokens from one holder to another</li>
+  <li>Burn tokens</li>
+</ul>
+<br>How is a NFT represented on Solana?<br>As a SPL Token with an associated metadata account, 0 decimals, and a maximum
+supply of 1.<br>
+<br>Metaplex Tools: ... and ...<br>Sugar CLI and Candy Machine<br>
+<br>Transactions&nbsp;are made up of an array of instructions, each one contains:
+<ul>
+  <li>the intended program's ID</li>
+  <li>an array of all accounts involved&nbsp;</li>
+  <li>a byte buffer of instruction data</li>
+</ul>
+<br>Every <em>transaction</em> contains:
+<ul>
+  <li>an array of all accounts it intends to read or write&nbsp;</li>
+  <li>one or more instructions&nbsp;</li>
+  <li>a recent blockhash&nbsp;</li>
+  <li>one or more signatures</li>
+</ul>
+<br>Programs store data in ...<br>Programs store data in PDAs, which stands for <strong>Program Derived
+  Address</strong><br>
+<br>PDAs do not have ...<br>PDAs do not have a corresponding secret key.<br>
+<br>Which function can you use to store and locate data?<br>findProgramAddress(seeds, programid) //derives a PDA<br>
+<br>Which function lets you&nbsp;get the accounts belonging to a program?<br>getProgramAccounts(programId)<br>
+<br><strong>Programs</strong> on Solana are a particular ...<br><strong>Programs</strong> on Solana are a particular
+type of account that stores and executes instruction logic<br>
+<br>Solana programs have a single <b>...</b><br>Solana programs have a single <strong>entry point</strong> to process
+instructions<br>
+<br>A program processes an instruction using ...<br>A program processes an instruction using the
+<strong>program_id</strong>, list of <strong>accounts</strong>, and <strong>instruction_data</strong> included with the
+instruction<br>
+<br>Most programs support <b>...</b><br>Most programs support <strong>multiple discrete instructions</strong> - you
+decide when writing your program what these instructions are and what data must accompany them<br>
+<br>... are often used to represent discrete program instructions<br>Rust <strong>enums</strong> are often used to
+represent discrete program instructions<br>
+<br>You can use the ... crate and the ... attribute to provide ... deserialization and serialization functionality to
+Rust structs<br>You can use the borsh crate and the derive attribute to provide Borsh deserialization and serialization
+functionality to Rust structs<br>
+<br>... help create conditional code paths based on the provided instruction<br>Rust match expressions help create
+conditional code paths based on the provided instruction<br>
+<br>Program state is stored in ...<br>Program state is stored in other accounts rather than in the program itself<br>
+<br>A Program Derived Address (PDA) is derived from ... Once derived, PDAs are subsequently used ...<br>
+A Program Derived Address (PDA) is derived from a program ID and an optional list of seeds. Once derived, PDAs are
+subsequently used as the
+address for a storage account.<br>
+<br>Creating an account requires...<br>Creating an account requires that we calculate the space required and the
+corresponding rent to allocate for the new account<br>
+<br>Creating a new account requires ...<br>Creating a new account requires a Cross Program Invocation (CPI) to the
+create_account instruction on the System Program<br>
+<br>Updating the data field on an account requires that ...<br>Updating the data field on an account requires that we
+serialize (convert to byte array) the data into the account<br>
+<br>Perform <strong>...</strong> to ensure that the provided account is ...<br>
+Perform <strong>owner checks</strong> to ensure that the provided account is owned by the public key you expect, e.g.
+ensuring that an
+account you expect to be a PDA is owned by program_id<br>
+<br>Perform <strong>...</strong> to ensure that any account modification has been ...<br>
+<br>Perform <strong>signer checks</strong> to ensure that any account modification has been signed by the right party or
+parties<br>
+<br><strong>Account ...</strong> entails ensuring that provided accounts are the accounts you expect them to be
+...<br>
+<strong>Account validation</strong> entails ensuring that provided accounts are the accounts you expect them to be,
+e.g. deriving PDAs with the expected seeds to make sure the address matches the provided account<br>
+<br><strong>Data ...</strong> entails ensuring that any provided data meets the criteria required by the
+program<br><strong>Data validation</strong> entails ensuring that any provided data meets the criteria required by the
+program<br>
+<br>A <strong>Program Derived Address</strong> (PDA) is derived from ...<br>A <strong>Program Derived Address</strong>
+(PDA) is derived from a <strong>program ID</strong> and an optional list of <strong>seeds</strong><br>
+<br>PDAs are owned and controlled by ...<br>PDAs are owned and controlled by the program they are derived from<br>
+<br>PDA derivation provides ... to find data based on ...<br>PDA derivation provides a deterministic way to find data
+based on the seeds used for the derivation<br>
+<br>... can be used to map to the data stored in a separate PDA account<br>Seeds can be used to map to the data stored
+in a separate PDA account<br>
+<br>A program can sign instructions on behalf of ...<br>A program can sign instructions on behalf of the PDAs derived
+from its ID<br>
+<br>CPIs are made using the commands ... or ...<br>CPIs are made using the commands <i>invoke</i> or
+<i>invoke_signed</i>, the latter being how programs provide signatures for PDAs that they own<br>
+<br>Which alternatives to environment variables exist?
+<ul>
+  <li>cfg attribute with <strong>Rust features</strong></li>
+  <li>cfg! <strong>macro</strong> to compile different code paths based on the features that are enabled</li>
+  <li>creating accounts and instructions that are only accessible by the program’s upgrade authority</li>
+</ul>
+<br><strong>Solana Pay</strong> is ...<br>
+<strong>Solana Pay</strong> is a specification for encoding Solana transaction requests within URLs, enabling
+standardized transaction
+requests across different Solana apps and wallets"<br>
+<br><strong>Partial signing</strong> of transactions allows for ...<br>
+<strong>Partial signing</strong> of transactions allows for the creation of transactions that require multiple
+signatures before they are
+submitted to the network<br>
+<br><strong>Transaction gating</strong> involves implementing ... that determine whether certain transactions are ... or
+not, based on certain ... or the presence of ... in the transaction<br>
+<strong>Transaction gating</strong> involves implementing rules that determine whether certain transactions are allowed
+to be processed or not, based on certain conditions or the presence of specific data in the transaction<br>
+<br><strong>Versioned Transactions</strong> refers to a way to support both ... and ... of transaction formats. The
+original transaction format is ... and new transaction versions start at version 0. Versioned transactions were
+implemented to support the use of Address Lookup Tables (also called lookup tables or LUTs).<br>
+<strong>Versioned Transactions</strong> refers to a way to support both legacy versions and newer versions of
+transaction formats. The original transaction format is "legacy" and new transaction versions start at version 0.
+Versioned transactions were implemented to support the use of Address Lookup Tables (also called lookup tables or
+LUTs).<br>
+<br><strong>Address Lookup Tables</strong> are ... used to store addresses of other accounts, which can then be
+referenced in ... using a 1 byte index instead of the full 32 bytes per address. This enables the creation of more
+complex transactions than what was possible prior to the introduction of LUTs.<br>
+<strong>Address Lookup Tables</strong> are accounts used to store addresses of other accounts, which can then be
+referenced in versioned transactions using a 1 byte index instead of the full 32 bytes per address. This enables the
+creation of more complex transactions than what was possible prior to the introduction of LUTs.<br>
+<br><strong>Procedural macros</strong> are a special kind of Rust macros that allow the programmer to...<br>
+<strong>Procedural macros</strong> are a special kind of Rust macros that allow the programmer to generate code at
+compile time based on custom input.<br>
+<br>In the Anchor framework, procedural macros are used to ...<br>
+In the Anchor framework, procedural macros are used to generate code that reduces the amount of boilerplate required
+when writing Solana programs.<br>
+<br>An <strong>Abstract Syntax Tree (AST)</strong> is a representation of the ... and ... of the input code that is
+passed to a procedural macro. When creating a macro, you use elements of the AST like ... and ... to generate the
+appropriate code.<br>
+An <strong>Abstract Syntax Tree (AST)</strong> is a representation of the syntax and structure of the input code that is
+passed to a procedural macro. When creating a macro, you use elements of the AST like tokens and items to generate the
+appropriate code.<br>
+<br>A <strong>...</strong> is the smallest unit of source code that can be parsed by the compiler in Rust.<br>
+A <strong>Token</strong> is the smallest unit of source code that can be parsed by the compiler in Rust.<br>
+<br>An <strong>...</strong> is a declaration that defines something that can be used in a Rust program, such as a
+struct, an enum, a trait, a function, or a method.<br>
+An <strong>Item</strong> is a declaration that defines something that can be used in a Rust program, such as a struct,
+an enum, a trait, a function, or a method.<br>
+<br>A <strong>...</strong> is a sequence of tokens that represents a piece of source code, and can be passed to a
+procedural macro to allow it to access and manipulate the individual tokens in the code.<br>
+A <strong>TokenStream</strong> is a sequence of tokens that represents a piece of source code, and can be passed to a
+procedural macro to allow it to access and manipulate the individual tokens in the code.<br>
+<br>How can you use&nbsp;<strong>Signer Checks</strong> to verify that specific accounts have signed a transaction and
+are authorized to perform an instruction?
+<ul>
+  <li>In Rust, simply check that an account’s is_signer property is true</li>
+  <li>In Anchor, you can use the <strong>Signer</strong> account type in your account validation struct to have Anchor
+    automatically perform a signer check on a given account</li>
+  <li>Anchor also has an account constraint that will automatically verify that a given account has signed a
+    transaction</li>
+</ul>
+<br>How can you implement&nbsp;<strong>Owner Checks</strong>&nbsp;in order to verify that accounts are owned by the
+expected program?
+<ul>
+  <li>In Rust, simply check that an account’s owner matches an expected program ID</li>
+  <li>Anchor program account types implement the Owner trait which allows the Account&lt;'info, T&gt; wrapper to
+    automatically verify program ownership</li>
+  <li>Anchor gives you the option to explicitly define the owner of an account<br>
+    if it should be anything other than the currently executing program</li>
+</ul>
+<br>How can you implement&nbsp;<strong>data validation checks</strong>&nbsp;in order to verify that account data matches
+an expected value?
+<ul>
+  <li>In Rust, simply compare the data stored on an account to an expected value.</li>
+  <li>In Anchor, you can use constraint to checks whether the given expression evaluates to true. Alternatively, you can
+    use has_one to check that a target account&nbsp;field stored on the account matches the key of an account in the
+    Accounts struct.</li>
+</ul>
+<br>How can you implement a check whether an account has already been initialized to prevent an account from being
+reinitialized and overriding existing account data?
+<ul>
+  <li>In Rust, initialize accounts with an <i>is_initialized</i> flag and check if it has already been set to true when
+    initializing an account</li>
+  <li>Use Anchor’s <i>init</i> constraint to create an account via a CPI to the system program and set its discriminator
+  </li>
+</ul>
+<br>When an instruction requires two mutable accounts of the same type, an attacker can pass in the same account twice,
+causing the account to be mutated in unintended ways. How can you prevent this both in Rust and Anchor?
+<ul>
+  <li>In Rust, simply compare the public keys of the two accounts and throw an error if they are the same.</li>
+  <li>In Anchor, you can use <i>constraint</i> to add an explicit constraint to an account checking that it is not the
+    same as another account.</li>
+</ul>
+<br>How can you use discriminators to distinguish between different account types?
+<ul>
+  <li>To implement a discriminator in Rust, include a field in the account struct to represent the account type</li>
+  <li>To implement a discriminator check in Rust, verify that the discriminator of the deserialized account data matches
+    the expected value</li>
+  <li>In Anchor, program account types automatically implement the <i>Discriminator</i> trait which creates an 8 byte
+    unique identifier for a type</li>
+  <li>Use Anchor’s <i>Account&lt;'info, T&gt;</i> type to automatically check the discriminator of the account when
+    deserializing the account data</li>
+</ul>
+<br>To generate a CPI, the target program must be passed into the invoking instruction as an account. This means that
+... could be passed into the instruction. Your program should ...<br>
+To generate a CPI, the target program must be passed into the invoking instruction as an account. This means that any
+target program could be passed into the instruction. Your program should check for incorrect or unexpected programs.<br>
+<br>Perform program checks in native programs by simply ...<br>
+Perform program checks in native programs by simply comparing the public key of the passed-in program to the progam you
+expected.<br>
+<br>If a program is written in Anchor, then it may have a publicly available ... This makes invoking the program from
+another Anchor program simple and secure. The ... automatically checks that ...<br>
+If a program is written in Anchor, then it may have a publicly available CPI module. This makes invoking the program
+from another Anchor program simple and secure. The Anchor CPI module automatically checks that the address of the
+program passed in matches the address of the program stored in the module.<br>
+<br>The <i>create_program_address</i> function derives a ... without searching for the ... This means there are...<br>
+The&nbsp;<i>create_program_address</i>&nbsp;function derives a PDA without searching for the&nbsp;<b>canonical bump</b>.
+This means there are multiple valid bumps, all of which will produce different addresses.<br>
+<br>Using <i>find_program_address</i> ensures that the ... is used for the ..., thus creating a ...<br>
+Using&nbsp;<i>find_program_address</i>&nbsp;ensures that the highest valid bump, or canonical bump, is used for the
+derivation, thus creating a deterministic way to find an address given specific seeds.<br>
+<br>Upon initialization, you can use Anchor's <i>...</i> and <i>...</i> constraint to ensure that PDA derivations in the
+account validation struct always use the ...<br>
+Upon initialization, you can use Anchor's&nbsp;<i>seeds</i>&nbsp;and&nbsp;<i>bump</i>&nbsp;constraint to ensure that PDA
+derivations in the account validation struct always use the canonical bump<br>
+<br>Anchor allows you to <b>specify a ...</b> with the <i>... = &lt;...&gt;</i> constraint when verifying the address of
+a PDA<br>
+Anchor allows you to&nbsp;<b>specify a bump</b>&nbsp;with the&nbsp;<i>bump = &lt;some_bump&gt;</i>&nbsp;constraint when
+verifying the address of a PDA<br>
+<br>Because <i>find_program_address</i> can be expensive, best practice is to ... in an account’s ... field to be
+referenced later on when re-deriving the address for verification<br>
+Because&nbsp;<i>find_program_address</i>&nbsp;can be expensive, best practice is to store the derived bump in an
+account’s data field to be referenced later on when re-deriving the address for verification<br>
+<br><strong>Closing an account</strong> improperly creates an opportunity for ...<br>
+<strong>Closing an account</strong> improperly creates an opportunity for reinitialization/revival attacks<br>
+<br>The Solana runtime <strong>garbage collects accounts</strong> when they are ... Closing accounts involves ..."<br>
+The Solana runtime <strong>garbage collects accounts</strong> when they are no longer rent exempt. Closing accounts
+involves transferring the lamports stored in the account for rent exemption to another account of your choosing.<br>
+<br>You can use the Anchor <i>...</i> constraint to securely close accounts and set the account discriminator to the
+<i>...</i><br>
+You can use the Anchor&nbsp;<i>#[account(close = &lt;address_to_send_lamports&gt;)]</i>&nbsp;constraint
+to securely close accounts and set the account discriminator to the&nbsp;<i>CLOSED_ACCOUNT_DISCRIMINATOR</i>"<br>
+<br>Using the same PDA for ... opens your program up to the possibility of users accessing ... that don't belong to
+them<br>
+Using the same PDA for multiple authority domains opens your program up to the possibility of users accessing data and
+funds that don't belong to them<br>
+<br>Prevent the same PDA from being used for multiple accounts by using ... that are ...<br>
+Prevent the same PDA from being used for multiple accounts by using seeds that are user and/or domain-specific<br>
+<br>Use Anchor’s ... and ... constraints to validate that a PDA is derived using the expected ... and ...<br>
+Use Anchor’s <i>seeds</i> and <i>bump</i> constraints to validate that a PDA is derived using the expected seeds and
+bump<br>
+<br>If your data accounts are too large for the ..., wrap them in ... to allocate them to the ...<br>
+If your data accounts are too large for the Stack, wrap them in Box to allocate them to the Heap<br>
+<br>Use ... to deal with accounts that are too large for ... (&lt; 10MB)<br>
+Use Zero-Copy to deal with accounts that are too large for <i>Box</i> (&lt; 10MB)<br>
+<br>The size and the order of fields in an account matter; put ... at the end<br>
+The size and the order of fields in an account matter; put variable length fields at the end<br>
+<br>Solana can process in parallel, but you can still run into bottlenecks; be mindful of ...<br>
+Solana can process in parallel, but you can still run into bottlenecks; be mindful of "shared" accounts that all users
+interacting with the program have to write to<br>
+<br>Oracles are services that provide ... to a ...<br>
+Oracles are services that provide external data to a blockchain network<br>
+<br>There are two main Oracle providers on Solana:
+<b>...</b><br><strong>Switchboard</strong>&nbsp;and&nbsp;<strong>Pyth</strong><br>
+<br>You can build your own Oracle to create a ...<br>
+You can build your own Oracle to create a custom data feed<br>
+<br>You have to be careful when choosing your data feed ...<br>
+You have to be careful when choosing your data feed providers<br>
+<br>Attempts at generating randomness within your program are likely to be... by users given there's no ...
+on-chain."<br>
+Attempts at generating randomness within your program are likely to be guessable by users given there's no true
+randomness on-chain.<br>
+<br>Verifiable Random Functions (VRFs) give developers the opportunity to incorporate ... in their onchain programs.<br>
+Verifiable Random Functions (VRFs) give developers the opportunity to incorporate securely generated random numbers in
+their onchain programs.<br>
+<br>A VRF is a public-key pseudorandom function that provides ... that its outputs were ...<br>
+A VRF is a public-key pseudorandom function that provides proofs that its outputs were calculated correctly.<br>
+<br>Switchboard offers a developer-friendly ... for ...<br>
+Switchboard offers a developer-friendly VRF for the Solana ecosystem.<br>
+<br><strong>Compressed NFTs (cNFTs)</strong> use <strong>...</strong> to hash NFT data and store the hash onchain in an
+account using a <strong>...</strong> structure<br><strong>Compressed NFTs (cNFTs)</strong> use <strong>State
+  Compression</strong> to hash NFT data and store the hash onchain in an account using a <strong>concurrent Merkle
+  tree</strong> structure<br>
+<br>The cNFT data hash can’t be used to infer the cNFT data, but it can be used to <b>...</b><br>The cNFT data hash
+can’t be used to infer the cNFT data, but it can be used to <strong>verify</strong> if the cNFT data you’re seeing is
+correct<br>
+<br>Supporting RPC providers <strong>...</strong> cNFT data off-chain when the cNFT is minted so that you can use the
+<strong>...</strong> to access the data<br>Supporting RPC providers <strong>index</strong> cNFT data off-chain when the
+cNFT is minted so that you can use the <strong>Read API</strong> to access the data<br>
+<br>The <strong>Metaplex Bubblegum program</strong> is an abstraction on top of the <strong>...</strong> program that
+enables you to more simply ... cNFT collections<br>The <strong>Metaplex Bubblegum program</strong> is an abstraction on
+top of the <strong>State Compression</strong> program that enables you to more simply create, mint, and manage cNFT
+collections<br>
+<br>State Compression on Solana is most commonly used for compressed NFTs, but it's possible to use it for ...<br>State
+Compression on Solana is most commonly used for compressed NFTs, but it's possible to use it for arbitrary data<br>
+<br>State Compression lowers the amount of data you have to store onchain by leveraging ...<br>State Compression lowers
+the amount of data you have to store onchain by leveraging Merkle trees.<br>
+<br>Merkle trees store a single ... that represents an entire ... of ... Each leaf on a Merkle tree is a ... of that
+leaf's ...<br>
+Merkle trees store a single hash that represents an entire binary tree of hashes. Each leaf on a Merkle tree is a hash
+of that leaf's data.<br>
+<br>... Merkle trees are a specialized version of Merkle trees that allow ... updates.<br>
+Concurrent Merkle trees are a specialized version of Merkle trees that allow concurrent updates.<br>
+<br>Because data in a ... program is not stored ..., you have to use indexers to keep an ... cache of the data and then
+verify that data against the ... Merkle tree.<br>
+Because data in a state-compressed program is not stored on-chain, you have to use indexers to keep an off-chain cache
+of the data and then verify that data against the onchain Merkle tree.<br>
+<br>The Solana Mobile Wallet Adapter (MWA) creates a ... between mobile apps and mobile wallets, allowing native mobile
+apps to submit transactions for signing<br>
+The Solana Mobile Wallet Adapter (MWA) creates a web socket connection between mobile apps and mobile wallets, allowing
+native mobile apps to submit transactions for signing<br>
+<br>The simplest way to get started creating Solana mobile applications is with Solana Mobile's React Native packages
+<i>@solana-mobile/mobile-wallet-adapter-...</i> and <i>@solana-mobile/mobile-wallet-adapter-...</i><br>
+The simplest way to get started creating Solana mobile applications is with Solana Mobile's React Native
+packages&nbsp;<i>@solana-mobile/mobile-wallet-adapter-protocol</i>&nbsp;and&nbsp;<i>@solana-mobile/mobile-wallet-adapter-protocol-web3js</i><br>
+<br>Wallets are just wrappers around a keypair, but they're essential for secure ...<br>
+Wallets are just wrappers around a keypair, but they're essential for secure key management<br>
+<br>Mobile and Web dApps handle their ... differently<br>
+Mobile and Web dApps handle their wallet-app connection differently<br>
+<br>MWA handles all of its wallet interaction within the <i>...</i> function<br>
+MWA handles all of its wallet interaction within the&nbsp;<i>transact</i>&nbsp;function<br>
+<br>Solana Mobile's <i>...</i> does the heavy lifting for surfacing wallet requests to wallet apps<br>
+Solana Mobile's&nbsp;<i>walletlib</i>&nbsp;does the heavy lifting for surfacing wallet requests to wallet apps<br>
+<br>Expo is an open-source collection of tools and libraries that wrap around ..., much like Next.js is a framework
+built on top of React.<br>
+Expo is an open-source collection of tools and libraries that wrap around React Native, much like Next.js is a framework
+built on top of React.<br>
+<br>In addition to simplifying the build/deploy process, Expo provides packages that give you access to mobile devices'
+...<br>
+In addition to simplifying the build/deploy process, Expo provides packages that give you access to mobile devices'
+peripherals and capabilities<br>
+<br>A lot of Solana ecosystem libraries don't support React native out of the box, but you can typically use them with
+the right&nbsp;<i>...</i><br>
+A lot of Solana ecosystem libraries don't support React native out of the box, but you can typically use them with the
+right&nbsp;<i>polyfills</i><br>
+<br>The existing Token Program on Solana provides interfaces for fungible and ... tokens. However as new features have
+been needed, various ... of Token Program have been created to add features, posing adoption ... across the
+ecosystem.<br>
+The existing Token Program on Solana provides interfaces for fungible and non-fungible tokens. However as new features
+have been needed, various forks of Token Program have been created to add features, posing adoption challenges across
+the ecosystem.<br>
+<br>To introduce new token features without disrupting current ...,..., and ... and to ensure the safety of existing
+tokens, a new token program, Token Extensions Program (also called ...), has been developed.<br>
+To introduce new token features without disrupting current users, wallets, and decentralized applications (dApps), and
+to ensure the safety of existing tokens, a new token program, Token Extensions Program (also called Token-2022), has
+been developed.<br>
+<br>Token Extensions Program is a separate program with a separate ...&nbsp; from the original Token Program. It
+supports the exact same functions plus additional ones through ...<br>
+Token Extensions Program is a separate program with a separate address from the original Token Program. It supports the
+exact same functions plus additional ones through extensions.<br>
+<br>What do you need to consider when supporting the&nbsp;<i>Token Extensions Program</i>&nbsp;from a client?
+<ul>
+  <li>The&nbsp;<i>Token Extensions Program</i>&nbsp;has all of the same functions as the&nbsp;<i>Token Program</i>, with
+    added&nbsp;<i>extensions</i></li>
+  <li><i><i>Token Program</i><span style="" font-style: normal;"">&nbsp;and&nbsp;</span><i>Token Extensions
+        Program</i><span style="" font-style: normal;"">&nbsp;use separate addresses and are not directly
+        compatible</span><br></i></li>
+  <li><i><span style="" font-style: normal;"">Supporting both requires specifying the correct program ID in client-side
+        functions<br></span></i></li>
+  <li><i><span style="" font-style: normal;"">By default, the SPL program library uses the original <strong>Token
+          Program</strong> unless another is specified<br></span></i></li>
+  <li><span style="" font-style: normal;"">The <i>Token Extensions Program</i> may also be referred to as it's technical
+      spec name <i>Token22</i><br></span></li>
+</ul>
+<br>What do you need to consider when interacting with the&nbsp;<i>Token Extensions Program</i>&nbsp;on chain?
+<ul>
+  <li>The <i>Token Extensions Program</i> is a superset of the <i>Token Program</i> with a different program id</li>
+  <li><i>token_program</i> is an Anchor account constraint allowing you to verify an account belongs to a specific token
+    program</li>
+  <li>Anchor introduced the concept of Interfaces to easily allow for programs to support interaction with both <i>Token
+      Program</i> and <i>Token Extensions Program</i></li>
+</ul>
+<br>Which metadata extensions exist and what is their purpose?
+<ul>
+  <li>The <i>metadata pointer</i> extension <br>
+    associates a token mint directly to a metadata account. This happens by
+    storing the metadata account's address in the mint. This metadata
+    account address can be an external metadata account, like Metaplex, or
+    can be the mint itself if using the <i>metadata</i> extension.</li>
+  <li>The <i>metadata</i> mint extension allows
+    embedding of metadata directly into mint accounts through the Token
+    Extensions Program. This is always accompanied with a self-referencing <i>metadata pointer</i>. This facilitates
+    embedding comprehensive token information at the minting stage.</li>
+  <li>These extensions enhance the interoperability of tokens across different
+    applications and platforms by standardizing how metadata is associated
+    and accessed.</li>
+  <li>Directly embedding or pointing to metadata can streamline transactions
+    and interactions by reducing the need for additional lookups or external
+    calls.</li>
+</ul>
+<br>What is the benefit of the&nbsp;Non-Transferrable Token Extension?
+<ul>
+  <li>In the original Token Program, creating non-transferrable (sometimes called ""soul-bound"") tokens is
+    impossible</li>
+  <li>The Token Extension Program's <i>non-transferrable token</i> enables non-transferrable tokens</li>
+</ul>
+<br>How do you use the Transfer Fee Extension?
+<ul>
+  <li>The Token Extension Program's <i>transfer fee</i><br>
+    extension allows fees to be withheld on every transfer. These fees are
+    held on the recipient's account, and can only be redeemed from the <i>withdrawWithheldAuthority</i> authority<br>
+  </li>
+  <li>Withheld tokens can be withdrawn directly from the recipient accounts or can be harvested back to the mint and
+    then withdrawn</li>
+  <li>Transfers with mints using the <i>transfer fee</i> extension need to use the <i>transferCheckedWithFee</i>
+    instruction</li>
+</ul>
+<br>What is the&nbsp;Close Mint Extension and how do you use it?
+<ul>
+  <li>The original Token Program only allowed closing token accounts, but not mint accounts.</li>
+  <li>The Token Extensions Program includes the <i>close mint</i> extension which allows mint accounts to be closed.
+  </li>
+  <li>To close a mint with the <i>close mint</i> extension, the supply of said mint needs to be 0.</li>
+  <li>The <i>mintCloseAuthority</i> can be updated by calling <i>setAuthority</i></li>
+</ul>
+<br>What is the purpose of the&nbsp;Default State Extension and how do you use it?
+<ul>
+  <li>The <i>default state</i> extension enables <br>
+    developers to set new token accounts for a mint with this extension to
+    be frozen by default, requiring interaction with a specific service to
+    unfreeze and utilize the tokens.</li>
+  <li>There are three states of token accounts: Initialized, Uninitialized,
+    and Frozen, which determine how a token account can be interacted with.</li>
+  <li>When a token account is frozen, the balance cannot change.</li>
+  <li>The <i>freezeAuthority</i> is the only address that can freeze and thaw a token account</li>
+  <li>The <i>default state</i> can be updated using <i>updateDefaultAccountState</i></li>
+</ul>
